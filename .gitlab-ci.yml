@@ -1,0 +1,42 @@
+variables:
+  TF_VAR_CI_PROJECT_ID: ${CI_PROJECT_ID}
+  TF_VAR_CI_REGISTRY: ${CI_REGISTRY}
+  KANIKO_VERSION: "v1.23.2"
+
+stages:
+  - build
+  - deploy
+
+terraform-plan:
+  stage: build
+  image:
+    name: hashicorp/terraform:latest
+    entrypoint:
+      - '/usr/bin/env'
+      - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+  tags:
+    - minikube
+  script:
+    - cd terraform
+    - apk update && apk add envsubst
+    - cat backend.tf.tpl | envsubst > backend.tf
+    - terraform init -input=false
+    - terraform plan -input=false -out=plan.cache
+
+terraform-apply:
+  stage: deploy
+  needs:
+    - terraform-plan
+  image:
+    name: hashicorp/terraform:latest
+    entrypoint:
+      - '/usr/bin/env'
+      - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+  tags:
+    - minikube
+  script:
+    - cd terraform
+    - apk update && apk add envsubst
+    - cat backend.tf.tpl | envsubst > backend.tf
+    - terraform init -input=false
+    - terraform apply -auto-approve
