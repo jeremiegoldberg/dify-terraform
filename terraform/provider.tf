@@ -11,12 +11,12 @@ terraform {
 }
 
 provider "kubernetes" {
-  config_path    = var.KUBECONFIG_MKS8
+  config_path = var.kubeconfig_path
 }
 
 provider "routeros" {
-  hosturl = var.MIKROTIK_HOST
+  hosturl  = var.MIKROTIK_HOST
   username = var.MIKROTIK_USER
   password = var.MIKROTIK_PASSWORD
-  insecure = true     
+  insecure = true
 }

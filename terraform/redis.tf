@@ -1,6 +1,6 @@
 resource "random_password" "redis_password" {
-  length           = 16
-  special          = false
+  length  = 16
+  special = false
 }
 
 
@@ -96,7 +96,7 @@ resource "kubernetes_stateful_set" "redis" {
 
           port {
             container_port = 6379
-            name          = "redis-p"
+            name           = "redis-p"
           }
 
           resources {

@@ -13,15 +13,15 @@ resource "kubernetes_stateful_set" "api" {
     namespace = kubernetes_namespace.dify.metadata[0].name
     labels = {
       "app.kubernetes.io/instance" = "dify-api"
-      "app"                       = "dify-api"
+      "app"                        = "dify-api"
     }
   }
 
   spec {
-    service_name = "dify-api"
-    replicas     = 1
+    service_name           = "dify-api"
+    replicas               = 1
     revision_history_limit = 1
-    min_ready_seconds = 10
+    min_ready_seconds      = 10
 
     selector {
       match_labels = {

@@ -1,6 +1,6 @@
 resource "random_password" "postgres_password" {
-  length           = 16
-  special          = false
+  length  = 16
+  special = false
 }
 
 resource "kubernetes_service_account" "postgres" {
@@ -106,7 +106,7 @@ resource "kubernetes_stateful_set" "postgres" {
 
           port {
             container_port = 5432
-            name          = "postgres-port"
+            name           = "postgres-port"
           }
 
           resources {
@@ -130,10 +130,10 @@ resource "kubernetes_stateful_set" "postgres" {
               command = ["pg_isready", "-U", "$(PGUSER)", "-d", "$(POSTGRES_DB)"]
             }
             initial_delay_seconds = 5
-            period_seconds       = 5
-            timeout_seconds     = 2
-            success_threshold   = 1
-            failure_threshold   = 10
+            period_seconds        = 5
+            timeout_seconds       = 2
+            success_threshold     = 1
+            failure_threshold     = 10
           }
         }
 

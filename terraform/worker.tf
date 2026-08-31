@@ -3,7 +3,7 @@ resource "kubernetes_stateful_set" "worker" {
     name      = "dify-worker"
     namespace = kubernetes_namespace.dify.metadata[0].name
     labels = {
-      app                       = "dify-worker"
+      app                          = "dify-worker"
       "app.kubernetes.io/instance" = "dify-worker"
     }
   }
@@ -180,7 +180,7 @@ resource "kubernetes_stateful_set" "worker" {
 
           port {
             container_port = 5001
-            protocol      = "TCP"
+            protocol       = "TCP"
           }
 
           volume_mount {

@@ -125,7 +125,7 @@ resource "kubernetes_stateful_set" "weaviate" {
 
           port {
             container_port = 8080
-            name          = "weaviate-p"
+            name           = "weaviate-p"
           }
 
           resources {

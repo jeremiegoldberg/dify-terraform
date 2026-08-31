@@ -134,7 +134,7 @@ resource "kubernetes_deployment" "nginx" {
   }
 
   spec {
-    replicas = 1
+    replicas               = 1
     revision_history_limit = 1
 
     selector {

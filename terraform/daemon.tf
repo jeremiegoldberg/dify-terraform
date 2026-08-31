@@ -13,7 +13,7 @@ resource "random_password" "plugin_daemon_key" {
 resource "kubernetes_deployment" "dify_plugin_daemon" {
   metadata {
     name      = "dify-plugin-daemon"
-    namespace = "dify"
+    namespace = kubernetes_namespace.dify.metadata[0].name
     labels = {
       app = "dify-plugin-daemon"
     }
@@ -68,14 +68,14 @@ resource "kubernetes_deployment" "dify_plugin_daemon" {
 
           port {
             container_port = 5003
-            protocol      = "TCP"
-            name         = "debug-port"
+            protocol       = "TCP"
+            name           = "debug-port"
           }
 
           port {
             container_port = 5002
-            protocol      = "TCP"
-            name         = "service-port"
+            protocol       = "TCP"
+            name           = "service-port"
           }
 
           env {
@@ -221,12 +221,12 @@ resource "kubernetes_deployment" "dify_plugin_daemon" {
       }
     }
   }
-} 
+}
 
 resource "kubernetes_service" "dify_plugin_daemon" {
   metadata {
     name      = "dify-plugin-daemon-svc"
-    namespace = "dify"
+    namespace = kubernetes_namespace.dify.metadata[0].name
   }
 
   spec {
@@ -249,12 +249,12 @@ resource "kubernetes_service" "dify_plugin_daemon" {
       name        = "service-port"
     }
   }
-} 
+}
 
 resource "kubernetes_service_account" "dify_plugin_daemon" {
   metadata {
     name      = "dify-plugin-daemon"
-    namespace = "dify"
+    namespace = kubernetes_namespace.dify.metadata[0].name
     labels = {
       "app.kubernetes.io/instance" = "dify-plugin-daemon"
     }
@@ -264,7 +264,7 @@ resource "kubernetes_service_account" "dify_plugin_daemon" {
 resource "kubernetes_role" "dify_plugin_daemon" {
   metadata {
     name      = "dify-plugin-daemon"
-    namespace = "dify"
+    namespace = kubernetes_namespace.dify.metadata[0].name
     labels = {
       "app.kubernetes.io/instance" = "dify-plugin-daemon"
     }
@@ -280,7 +280,7 @@ resource "kubernetes_role" "dify_plugin_daemon" {
 resource "kubernetes_role_binding" "dify_plugin_daemon" {
   metadata {
     name      = "dify-plugin-daemon"
-    namespace = "dify"
+    namespace = kubernetes_namespace.dify.metadata[0].name
     labels = {
       "app.kubernetes.io/instance" = "dify-plugin-daemon"
     }
@@ -295,7 +295,7 @@ resource "kubernetes_role_binding" "dify_plugin_daemon" {
   subject {
     kind      = "ServiceAccount"
     name      = kubernetes_service_account.dify_plugin_daemon.metadata[0].name
-    namespace = "dify"
+    namespace = kubernetes_namespace.dify.metadata[0].name
   }
 }
 

@@ -166,7 +166,7 @@ resource "kubernetes_deployment" "ssrf" {
 
           port {
             container_port = 3128
-            name          = "dify-ssrf"
+            name           = "dify-ssrf"
           }
 
           volume_mount {

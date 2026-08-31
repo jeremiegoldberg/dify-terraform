@@ -4,11 +4,11 @@ resource "kubernetes_ingress_v1" "dify" {
     name      = "dify-ingress"
     namespace = kubernetes_namespace.dify.metadata[0].name
     annotations = {
-      "kubernetes.io/ingress.class"                = "nginx"
-      "nginx.ingress.kubernetes.io/proxy-body-size" = "15m"
+      "kubernetes.io/ingress.class"                    = "nginx"
+      "nginx.ingress.kubernetes.io/proxy-body-size"    = "15m"
       "nginx.ingress.kubernetes.io/proxy-read-timeout" = "3600"
       "nginx.ingress.kubernetes.io/proxy-send-timeout" = "3600"
-      
+
       # CORS configuration
       "nginx.ingress.kubernetes.io/enable-cors"            = "true"
       "nginx.ingress.kubernetes.io/cors-allow-credentials" = "true"
@@ -22,7 +22,7 @@ resource "kubernetes_ingress_v1" "dify" {
   spec {
     ingress_class_name = "nginx"
     rule {
-      
+
       host = "dify.${var.domain}"
       http {
         path {
@@ -40,7 +40,7 @@ resource "kubernetes_ingress_v1" "dify" {
 
     # Direct service access ingress rules
     rule {
-      
+
       host = "difyapi.${var.domain}"
       http {
         path {
@@ -115,15 +115,22 @@ resource "kubernetes_ingress_v1" "dify" {
       }
     }
 
-    tls {
-      secret_name = "dify-tls"
-      hosts = [
-        "dify.${var.domain}",
-        "difyapi.${var.domain}",
-        "consoleapi.${var.domain}",
-        "difyapp.${var.domain}",
-        "appapi.${var.domain}"
-      ]
+    # Declared only when the secret exists. An ingress pointing at a missing
+    # TLS secret serves the controller's default certificate and says nothing
+    # about why.
+    dynamic "tls" {
+      for_each = kubernetes_secret.dify_tls
+
+      content {
+        secret_name = tls.value.metadata[0].name
+        hosts = [
+          "dify.${var.domain}",
+          "difyapi.${var.domain}",
+          "consoleapi.${var.domain}",
+          "difyapp.${var.domain}",
+          "appapi.${var.domain}"
+        ]
+      }
     }
   }
 } 
